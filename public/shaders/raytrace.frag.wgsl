@@ -46,28 +46,17 @@ fn main(
 ) -> FragOutput {
     // let PI: f32 = 3.141592636;
     var out: FragOutput;
-    var new_pos = vec2<f32>(pos.xy / 200 - 1);
+    let new_pos = vec2<f32>(pos.xy / 200 - 1);
 
-    // var circle_origin = vec4<f32>(0, 0, 0, 1);
-    // var circle_radius = f32(1);
-
-    var ray_origin = vec4<f32>(0,0,0,1) * camera_pos_mat;
-    var ray_dir = vec4<f32>(new_pos.x - 0.5, new_pos.y - 0.5, - 1.5, 1) * camera_rot_mat;
-    ray_dir = normalize(ray_dir);
-
-    // var light_pos = vec4<f32>(3,5,0,1);
-
-    // let t = ray_sphere_hit(ray_origin, ray_dir, circle_origin, circle_radius);
-    // var hit_point = (ray_origin + ray_dir * t);
-    // var hit_point_offset = (ray_origin + ray_dir * (t - 0.0001));
-    // var normal = (hit_point - circle_origin) * 10;
+    let ray_origin = vec4<f32>(0,0,0,1) * camera_pos_mat;
+    let ray_dir = normalize(vec4<f32>(new_pos.x - 0.5, new_pos.y - 0.5, - 1.5, 1) * camera_rot_mat);
+    let light_pos = vec4<f32>(3,-10,0,1);
 
     let sky_color1 = vec4<f32>(138 / 255.0, 255 / 255.0, 249 / 255.0, 1);
     let sky_color2 = vec4<f32>(46  / 255.0, 168 / 255.0, 201 / 255.0,1);
     let sphere_color = vec4<f32>(0.8,1,0,1);
     let sky_color = mix(sky_color1, sky_color2, 1 -ray_dir.y);
 
-    // let hit_to_light_normal = normalize(light_pos - hit_point);
 
     // var light_t = ray_sphere_hit(hit_point_offset, hit_to_light_normal, circle_origin, circle_radius);
 
@@ -79,20 +68,30 @@ fn main(
 
 
     var closest_sphere_index: f32 = -1;
-    var closest_sphere_t: f32 = 0;
+    var closest_sphere_t: f32 = 100000;
 
     for (var i = 0; i < i32(spheres_count); i++) {
         var sphere = spheres[i];
 
         var t = ray_sphere_hit(ray_origin, ray_dir, sphere.pos, sphere.radius);
-        if(t > closest_sphere_t){
+        if(t < closest_sphere_t && t > 0){
             closest_sphere_index = f32(i);
             closest_sphere_t = t;
         }
     }
 
     if(closest_sphere_index >= 0 && closest_sphere_index < spheres_count && closest_sphere_t > 0){
-        out.color = sphere_color;
+        let sphere = spheres[i32(closest_sphere_index)];
+        let hit_point = ray_origin + ray_dir * closest_sphere_t;
+        let normal = (hit_point - sphere.pos);
+        let hit_to_light_normal = normalize(hit_point - light_pos);
+
+        let light_t = ray_sphere_hit(hit_point, hit_to_light_normal, sphere.pos, sphere.radius - 0.01);
+
+
+        if(light_t > 0){
+            out.color = sphere_color;
+        }
     } else {
         out.color = sky_color;
     }
