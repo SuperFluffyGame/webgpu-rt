@@ -1,5 +1,5 @@
 import { getRotationMatrix, getTranslationMatrix, screenGeo, screenUV, sphereCount, sphereData, } from "./data.js";
-import { device, basicFragShaderCode, basicVertShaderCode, colorTarget, canvas, context, } from "./init.js";
+import { device, basicFragShaderCode, raytraceVertShaderCode, colorTarget, canvas, context, } from "./init.js";
 import { bindGroup, bindGroupLayout, cameraPosMatBuffer, cameraRotMatBuffer, sphereBuffer, sphereCountBuffer, } from "./buffers.js";
 const pipelineLayout = device.createPipelineLayout({
     bindGroupLayouts: [bindGroupLayout],
@@ -9,7 +9,7 @@ const pipeline = device.createRenderPipeline({
     layout: pipelineLayout,
     vertex: {
         module: device.createShaderModule({
-            code: basicVertShaderCode,
+            code: raytraceVertShaderCode,
         }),
         entryPoint: "main",
         buffers: [

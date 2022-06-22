@@ -12,7 +12,7 @@ import { mat4, vec4 } from "./gl-matrix/index.js";
 import {
     device,
     basicFragShaderCode,
-    basicVertShaderCode,
+    raytraceVertShaderCode,
     colorTarget,
     canvas,
     context,
@@ -34,7 +34,7 @@ const pipeline = device.createRenderPipeline({
     layout: pipelineLayout,
     vertex: {
         module: device.createShaderModule({
-            code: basicVertShaderCode,
+            code: raytraceVertShaderCode,
         }),
         entryPoint: "main",
         buffers: [

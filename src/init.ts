@@ -1,6 +1,6 @@
 // get shader files
-export const basicVertShaderCode = await (
-    await fetch("./shaders/basic.vert.wgsl")
+export const raytraceVertShaderCode = await (
+    await fetch("./shaders/raytrace.vert.wgsl")
 ).text();
 export const basicFragShaderCode = await (
     await fetch("./shaders/basic.frag.wgsl")
