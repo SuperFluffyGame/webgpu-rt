@@ -58,15 +58,6 @@ fn main(
     let sky_color = mix(sky_color1, sky_color2, 1 -ray_dir.y);
 
 
-    // var light_t = ray_sphere_hit(hit_point_offset, hit_to_light_normal, circle_origin, circle_radius);
-
-    // var light_hit_point = hit_point_offset + hit_to_light_normal * light_t;
-
-    // var hit_dist_from_light = distance(light_hit_point, light_pos) / 10;
-
-    // let shadow = 1 - step(light_t, 0);
-
-
     var closest_sphere_index: f32 = -1;
     var closest_sphere_t: f32 = 100000;
 
@@ -84,9 +75,11 @@ fn main(
         let sphere = spheres[i32(closest_sphere_index)];
         let hit_point = ray_origin + ray_dir * closest_sphere_t;
         let normal = (hit_point - sphere.pos);
-        let hit_to_light_normal = normalize(hit_point - light_pos);
+        let light_to_hit_normal = normalize(hit_point - light_pos);
+        let hit_to_light_normal = normalize(light_pos - hit_point);
 
-        let light_t = ray_sphere_hit(hit_point, hit_to_light_normal, sphere.pos, sphere.radius - 0.01);
+
+        let light_t = ray_sphere_hit(hit_point, light_to_hit_normal, sphere.pos, sphere.radius - 0.01);
 
 
         if(light_t > 0){
@@ -95,8 +88,6 @@ fn main(
     } else {
         out.color = sky_color;
     }
-
-    // out.color = vec4(ray_dir);
 
     return out;
 }
