@@ -1,9 +1,9 @@
 // get shader files
 export const raytraceVertShaderCode = await (
-    await fetch("./shaders/raytrace.vert.wgsl")
+    await fetch("./shaders/basic.vert.wgsl")
 ).text();
 export const basicFragShaderCode = await (
-    await fetch("./shaders/basic.frag.wgsl")
+    await fetch("./shaders/raytrace.frag.wgsl")
 ).text();
 
 // check if webgpu is enabled
