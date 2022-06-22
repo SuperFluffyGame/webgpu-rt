@@ -7,16 +7,19 @@ struct FragOutput {
     @location(0) color: vec4<f32>
 }
 
-@binding(0) @group(0) var<uniform> camera_pos_mat: mat4x4<f32>;
-@binding(1) @group(0) var<uniform> camera_rot_mat: mat4x4<f32>;
+//camera bindings
+@group(0) @binding(0) var<uniform> camera_pos_mat: mat4x4<f32>;
+@group(0) @binding(1) var<uniform> camera_rot_mat: mat4x4<f32>;
+@group(0) @binding(2) var<uniform> camera_fov: f32;
 
-// Not Implemented
-@binding(2) @group(0) var<uniform> camera_fov: f32;
-@binding(3) @group(0) var<uniform> canvas_size: vec2<f32>;
-//
+//object bindings
+@group(1) @binding(0) var<uniform> spheres_count: f32;
+@group(1) @binding(1) var<storage> spheres: array<Sphere>;
+@group(1) @binding(2) var<uniform> light_pos: vec4<f32>;
 
-@binding(4) @group(0) var<storage> spheres: array<Sphere>;
-@binding(5) @group(0) var<uniform> spheres_count: f32;
+// other bindings
+@group(2) @binding(0) var<uniform> canvas_size: vec2<f32>;
+@group(2) @binding(1) var<uniform> ray_bounces: f32;
 
 fn ray_sphere_hit(ray_origin: vec4<f32>, ray_dir: vec4<f32>, sphere_origin: vec4<f32>, sphere_radius: f32) -> f32{
     var a = pow(ray_dir.x, 2) + pow(ray_dir.y, 2) + pow(ray_dir.z, 2);
@@ -60,8 +63,6 @@ fn main(
         ) * camera_rot_mat
     );
 
-    let light_pos = vec4<f32>(3,-10,0,1);
-
     let sky_color1 = vec4<f32>(138 / 255.0, 255 / 255.0, 249 / 255.0, 1);
     let sky_color2 = vec4<f32>(46  / 255.0, 168 / 255.0, 201 / 255.0,1);
     let sphere_color = vec4<f32>(0.8,1,0,1);
@@ -101,4 +102,3 @@ fn main(
 
     return out;
 }
-

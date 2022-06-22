@@ -1,8 +1,16 @@
-import { getRotationMatrix, getTranslationMatrix, screenGeo, screenUV, sphereCount, sphereData, } from "./data.js";
-import { device, basicFragShaderCode, raytraceVertShaderCode, colorTarget, canvas, context, options, } from "./init.js";
-import { aspectBuffer as sizeBuffer, bindGroup, bindGroupLayout, cameraPosMatBuffer, cameraRotMatBuffer, fovBuffer, sphereBuffer, sphereCountBuffer, } from "./buffers.js";
+import { getRotationMatrix, getTranslationMatrix, lightPos, screenGeo, screenUV, sphereCount, sphereData, } from "./data.js";
+import { device, basicFragShaderCode, raytraceVertShaderCode, colorTarget, canvas, context, } from "./init.js";
+import { canvasSizeBuffer, cameraPosMatBuffer, cameraRotMatBuffer, fovBuffer, sphereBuffer, sphereCountBuffer, lightPosBuffer, rayBouncesBuffer, } from "./buffers.js";
+import { cameraBindGroup, cameraBindGroupLayout, } from "./bindGroups/cameraBindings.js";
+import { objectBindGroup, objectBindGroupLayout, } from "./bindGroups/objectBindings.js";
+import { otherBindGroup, otherBindGroupLayout, } from "./bindGroups/otherBindings.js";
+import { options } from "./data.js";
 const pipelineLayout = device.createPipelineLayout({
-    bindGroupLayouts: [bindGroupLayout],
+    bindGroupLayouts: [
+        cameraBindGroupLayout,
+        objectBindGroupLayout,
+        otherBindGroupLayout,
+    ],
 });
 //create pipline
 const pipeline = device.createRenderPipeline({
@@ -24,17 +32,6 @@ const pipeline = device.createRenderPipeline({
                     },
                 ],
             },
-            // //uv
-            // {
-            //     arrayStride: 8,
-            //     attributes: [
-            //         {
-            //             shaderLocation: 1,
-            //             format: "float32x2",
-            //             offset: 0,
-            //         },
-            //     ],
-            // },
         ],
     },
     fragment: {
@@ -87,14 +84,21 @@ function render(time) {
     });
     const translationMatrix = getTranslationMatrix();
     const rotationMatrix = getRotationMatrix();
+    //group 1
     device.queue.writeBuffer(cameraPosMatBuffer, 0, translationMatrix);
     device.queue.writeBuffer(cameraRotMatBuffer, 0, rotationMatrix);
     device.queue.writeBuffer(fovBuffer, 0, new Float32Array([options.fov]));
-    device.queue.writeBuffer(sizeBuffer, 0, new Float32Array([options.width, options.height]));
+    //group 2
     device.queue.writeBuffer(sphereCountBuffer, 0, sphereCount);
     device.queue.writeBuffer(sphereBuffer, 0, sphereData);
+    device.queue.writeBuffer(lightPosBuffer, 0, lightPos);
+    //group 3
+    device.queue.writeBuffer(canvasSizeBuffer, 0, new Float32Array([options.width, options.height]));
+    device.queue.writeBuffer(rayBouncesBuffer, 0, new Float32Array([options.rayBounces]));
     renderPass.setPipeline(pipeline);
-    renderPass.setBindGroup(0, bindGroup);
+    renderPass.setBindGroup(0, cameraBindGroup);
+    renderPass.setBindGroup(1, objectBindGroup);
+    renderPass.setBindGroup(2, otherBindGroup);
     renderPass.setVertexBuffer(0, screenGeoBuffer);
     // renderPass.setVertexBuffer(1, screenUVbuffer);
     renderPass.draw(6);

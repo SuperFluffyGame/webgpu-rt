@@ -1,9 +1,4 @@
-export const options = {
-    width: 600,
-    height: 600,
-    fov: 90,
-};
-options.fov = (options.fov * Math.PI) / 180;
+import { options } from "./data.js";
 // get shader files
 export const raytraceVertShaderCode = await (await fetch("./shaders/basic.vert.wgsl")).text();
 export const basicFragShaderCode = await (await fetch("./shaders/raytrace.frag.wgsl")).text();
