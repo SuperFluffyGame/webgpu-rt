@@ -20,6 +20,7 @@ struct FragOutput {
 // other bindings
 @group(2) @binding(0) var<uniform> canvas_size: vec2<f32>;
 @group(2) @binding(1) var<uniform> ray_bounces: f32;
+@group(2) @binding(2) var<uniform> mult_sample: f32;
 
 fn ray_sphere_hit(ray_origin: vec4<f32>, ray_dir: vec4<f32>, sphere_origin: vec4<f32>, sphere_radius: f32) -> f32{
     var a = pow(ray_dir.x, 2) + pow(ray_dir.y, 2) + pow(ray_dir.z, 2);

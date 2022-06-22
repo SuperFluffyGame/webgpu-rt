@@ -1,6 +1,6 @@
 import { getRotationMatrix, getTranslationMatrix, lightPos, screenGeo, screenUV, sphereCount, sphereData, } from "./data.js";
 import { device, basicFragShaderCode, raytraceVertShaderCode, colorTarget, canvas, context, } from "./init.js";
-import { canvasSizeBuffer, cameraPosMatBuffer, cameraRotMatBuffer, fovBuffer, sphereBuffer, sphereCountBuffer, lightPosBuffer, rayBouncesBuffer, } from "./buffers.js";
+import { canvasSizeBuffer, cameraPosMatBuffer, cameraRotMatBuffer, fovBuffer, sphereBuffer, sphereCountBuffer, lightPosBuffer, rayBouncesBuffer, multiSampleBuffer, } from "./buffers.js";
 import { cameraBindGroup, cameraBindGroupLayout, } from "./bindGroups/cameraBindings.js";
 import { objectBindGroup, objectBindGroupLayout, } from "./bindGroups/objectBindings.js";
 import { otherBindGroup, otherBindGroupLayout, } from "./bindGroups/otherBindings.js";
@@ -95,6 +95,7 @@ function render(time) {
     //group 3
     device.queue.writeBuffer(canvasSizeBuffer, 0, new Float32Array([options.width, options.height]));
     device.queue.writeBuffer(rayBouncesBuffer, 0, new Float32Array([options.rayBounces]));
+    device.queue.writeBuffer(multiSampleBuffer, 0, new Float32Array([+options.multiSample]));
     renderPass.setPipeline(pipeline);
     renderPass.setBindGroup(0, cameraBindGroup);
     renderPass.setBindGroup(1, objectBindGroup);

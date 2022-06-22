@@ -24,6 +24,7 @@ import {
     sphereCountBuffer,
     lightPosBuffer,
     rayBouncesBuffer,
+    multiSampleBuffer,
 } from "./buffers.js";
 import {
     cameraBindGroup,
@@ -143,6 +144,11 @@ function render(time: number) {
         rayBouncesBuffer,
         0,
         new Float32Array([options.rayBounces])
+    );
+    device.queue.writeBuffer(
+        multiSampleBuffer,
+        0,
+        new Float32Array([+options.multiSample])
     );
 
     renderPass.setPipeline(pipeline);

@@ -1,7 +1,8 @@
 import { device } from "../init.js";
-import { canvasSizeBuffer, rayBouncesBuffer } from "../buffers.js";
+import { canvasSizeBuffer, rayBouncesBuffer, multiSampleBuffer, } from "../buffers.js";
 // binding 1: canvasSizeBuffer
 // binding 2: rayBouncesBuffer
+// binding 3: multiSampleBuffer
 export const otherBindGroupLayout = device.createBindGroupLayout({
     entries: [
         {
@@ -13,6 +14,13 @@ export const otherBindGroupLayout = device.createBindGroupLayout({
         },
         {
             binding: 1,
+            visibility: GPUShaderStage.FRAGMENT,
+            buffer: {
+                type: "uniform",
+            },
+        },
+        {
+            binding: 2,
             visibility: GPUShaderStage.FRAGMENT,
             buffer: {
                 type: "uniform",
@@ -33,6 +41,12 @@ export const otherBindGroup = device.createBindGroup({
             binding: 1,
             resource: {
                 buffer: rayBouncesBuffer,
+            },
+        },
+        {
+            binding: 2,
+            resource: {
+                buffer: multiSampleBuffer,
             },
         },
     ],

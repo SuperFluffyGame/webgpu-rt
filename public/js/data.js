@@ -1,10 +1,13 @@
 import { mat4 } from "./gl-matrix/index.js";
 import { rotation, camera } from "./controls.js";
 export const options = {
-    width: 600,
-    height: 600,
-    fov: 90,
+    width: window.innerWidth,
+    height: window.innerHeight,
+    fov: 75,
     rayBounces: 0,
+    verticalMouseSensitivity: 1,
+    horizontalMouseSensitivity: 1,
+    multiSample: false,
 };
 options.fov = (options.fov * Math.PI) / 180;
 export function getRotationMatrix() {
