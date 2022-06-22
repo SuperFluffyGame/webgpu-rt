@@ -16,12 +16,15 @@ import {
     colorTarget,
     canvas,
     context,
+    options,
 } from "./init.js";
 import {
+    aspectBuffer as sizeBuffer,
     bindGroup,
     bindGroupLayout,
     cameraPosMatBuffer,
     cameraRotMatBuffer,
+    fovBuffer,
     sphereBuffer,
     sphereCountBuffer,
 } from "./buffers.js";
@@ -120,6 +123,13 @@ function render(time: number) {
 
     device.queue.writeBuffer(cameraPosMatBuffer, 0, translationMatrix);
     device.queue.writeBuffer(cameraRotMatBuffer, 0, rotationMatrix);
+
+    device.queue.writeBuffer(fovBuffer, 0, new Float32Array([options.fov]));
+    device.queue.writeBuffer(
+        sizeBuffer,
+        0,
+        new Float32Array([options.width, options.height])
+    );
 
     device.queue.writeBuffer(sphereCountBuffer, 0, sphereCount);
     device.queue.writeBuffer(sphereBuffer, 0, sphereData);

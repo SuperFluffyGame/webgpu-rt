@@ -1,3 +1,10 @@
+export const options = {
+    width: 600,
+    height: 600,
+    fov: 90,
+};
+options.fov = (options.fov * Math.PI) / 180;
+
 // get shader files
 export const raytraceVertShaderCode = await (
     await fetch("./shaders/basic.vert.wgsl")
@@ -17,6 +24,8 @@ export const device = await adapter.requestDevice();
 export const colorTarget: GPUTextureFormat = "rgba8unorm";
 
 export const canvas = document.getElementById("c") as HTMLCanvasElement;
+canvas.width = options.width;
+canvas.height = options.height;
 export const context = canvas.getContext("webgpu") as GPUCanvasContext;
 context.configure({
     device,

@@ -1,6 +1,6 @@
 import { getRotationMatrix, getTranslationMatrix, screenGeo, screenUV, sphereCount, sphereData, } from "./data.js";
-import { device, basicFragShaderCode, raytraceVertShaderCode, colorTarget, canvas, context, } from "./init.js";
-import { bindGroup, bindGroupLayout, cameraPosMatBuffer, cameraRotMatBuffer, sphereBuffer, sphereCountBuffer, } from "./buffers.js";
+import { device, basicFragShaderCode, raytraceVertShaderCode, colorTarget, canvas, context, options, } from "./init.js";
+import { aspectBuffer as sizeBuffer, bindGroup, bindGroupLayout, cameraPosMatBuffer, cameraRotMatBuffer, fovBuffer, sphereBuffer, sphereCountBuffer, } from "./buffers.js";
 const pipelineLayout = device.createPipelineLayout({
     bindGroupLayouts: [bindGroupLayout],
 });
@@ -89,6 +89,8 @@ function render(time) {
     const rotationMatrix = getRotationMatrix();
     device.queue.writeBuffer(cameraPosMatBuffer, 0, translationMatrix);
     device.queue.writeBuffer(cameraRotMatBuffer, 0, rotationMatrix);
+    device.queue.writeBuffer(fovBuffer, 0, new Float32Array([options.fov]));
+    device.queue.writeBuffer(sizeBuffer, 0, new Float32Array([options.width, options.height]));
     device.queue.writeBuffer(sphereCountBuffer, 0, sphereCount);
     device.queue.writeBuffer(sphereBuffer, 0, sphereData);
     renderPass.setPipeline(pipeline);

@@ -8,6 +8,5 @@ fn main(
 ) -> VertOutput{
     var out: VertOutput;
     out.pos = pos;
-    
     return out;
 }

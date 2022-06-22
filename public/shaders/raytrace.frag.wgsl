@@ -12,7 +12,7 @@ struct FragOutput {
 
 // Not Implemented
 @binding(2) @group(0) var<uniform> camera_fov: f32;
-@binding(3) @group(0) var<uniform> camera_aspect: f32;
+@binding(3) @group(0) var<uniform> canvas_size: vec2<f32>;
 //
 
 @binding(4) @group(0) var<storage> spheres: array<Sphere>;
@@ -46,10 +46,20 @@ fn main(
 ) -> FragOutput {
     // let PI: f32 = 3.141592636;
     var out: FragOutput;
-    let new_pos = vec2<f32>(pos.xy / 200 - 1);
+
+    let min_size = min(canvas_size.x, canvas_size.y);
+    let new_pos = vec2<f32>((pos.x - canvas_size.x / 2.0) / (min_size / 2.0), 
+                            (pos.y - canvas_size.y / 2.0) / (min_size / 2.0));
 
     let ray_origin = vec4<f32>(0,0,0,1) * camera_pos_mat;
-    let ray_dir = normalize(vec4<f32>(new_pos.x - 0.5, new_pos.y - 0.5, - 1.5, 1) * camera_rot_mat);
+    var ray_dir = normalize(
+        vec4<f32>(
+            new_pos.x,
+            new_pos.y,
+            - (1 / tan(camera_fov / 2)), 1
+        ) * camera_rot_mat
+    );
+
     let light_pos = vec4<f32>(3,-10,0,1);
 
     let sky_color1 = vec4<f32>(138 / 255.0, 255 / 255.0, 249 / 255.0, 1);

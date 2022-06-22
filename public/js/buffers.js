@@ -16,6 +16,14 @@ export const sphereCountBuffer = device.createBuffer({
     usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
     size: 4,
 });
+export const aspectBuffer = device.createBuffer({
+    size: 8,
+    usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+});
+export const fovBuffer = device.createBuffer({
+    size: 4,
+    usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+});
 export const bindGroupLayout = device.createBindGroupLayout({
     entries: [
         {
@@ -27,6 +35,20 @@ export const bindGroupLayout = device.createBindGroupLayout({
         },
         {
             binding: 1,
+            visibility: GPUShaderStage.FRAGMENT,
+            buffer: {
+                type: "uniform",
+            },
+        },
+        {
+            binding: 2,
+            visibility: GPUShaderStage.FRAGMENT,
+            buffer: {
+                type: "uniform",
+            },
+        },
+        {
+            binding: 3,
             visibility: GPUShaderStage.FRAGMENT,
             buffer: {
                 type: "uniform",
@@ -61,6 +83,18 @@ export const bindGroup = device.createBindGroup({
             binding: 1,
             resource: {
                 buffer: cameraRotMatBuffer,
+            },
+        },
+        {
+            binding: 2,
+            resource: {
+                buffer: fovBuffer,
+            },
+        },
+        {
+            binding: 3,
+            resource: {
+                buffer: aspectBuffer,
             },
         },
         {
