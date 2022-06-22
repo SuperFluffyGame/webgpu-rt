@@ -1,0 +1,14 @@
+{
+    "include": ["src/**/*", "src/*"],
+    "compilerOptions": {
+        "allowJs": true,
+        "outDir": "public/js",
+        "alwaysStrict": true,
+        "strict": true,
+        "module": "esnext",
+        "lib": ["esnext", "dom"],
+        "target": "esnext",
+        "typeRoots": ["./node_modules/@webgpu/types", "./node_modules/@types"],
+        "moduleResolution": "node"
+    }
+}
